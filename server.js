@@ -9,35 +9,43 @@ let redirect_uri =
   'http://localhost:8888/callback'
 
 app.get('/login', function(req, res) {
-  res.redirect('https://accounts.spotify.com/authorize?' +
+  res.redirect('https://www.strava.com/oauth/authorize?' +
     querystring.stringify({
+      client_id: process.env.STRAVA_CLIENT_ID,
+      redirect_uri,
       response_type: 'code',
-      client_id: process.env.SPOTIFY_CLIENT_ID,
-      scope: 'user-read-private user-read-email',
-      redirect_uri
+      approval_prompt: 'auto',
+      scope: 'read,activity:read_all,profile:read_all,read_all',
+      
     }))
 })
 
 app.get('/callback', function(req, res) {
   let code = req.query.code || null
+  let scope = req.query.scope
+  //console.log('client ID->',process.env.STRAVA_CLIENT_ID);
+  //console.log('client Secret->',process.env.STRAVA_CLIENT_SECRET);
   let authOptions = {
-    url: 'https://accounts.spotify.com/api/token',
+    url: 'https://www.strava.com/oauth/token?',
     form: {
+      client_id: process.env.STRAVA_CLIENT_ID,
+      client_secret: process.env.STRAVA_CLIENT_SECRET,
       code: code,
-      redirect_uri,
+      // redirect_uri,
       grant_type: 'authorization_code'
     },
-    headers: {
-      'Authorization': 'Basic ' + (new Buffer(
-        process.env.SPOTIFY_CLIENT_ID + ':' + process.env.SPOTIFY_CLIENT_SECRET
-      ).toString('base64'))
-    },
+    // headers: {
+    //   'Authorization': 'Basic ' + (new Buffer(
+    //     process.env.SPOTIFY_CLIENT_ID + ':' + process.env.SPOTIFY_CLIENT_SECRET
+    //   ).toString('base64'))
+    // },
     json: true
   }
   request.post(authOptions, function(error, response, body) {
     var access_token = body.access_token
     let uri = process.env.FRONTEND_URI || 'http://localhost:3000'
     res.redirect(uri + '?access_token=' + access_token)
+    //console.log('repsonse-body ->',body)
   })
 })
 
