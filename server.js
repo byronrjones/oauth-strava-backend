@@ -18,6 +18,8 @@ app.get('/login', function(req, res) {
       scope: 'read,activity:read_all,profile:read_all,read_all',
       
     }))
+
+    console.log('login-request-body ->',res)
 })
 
 app.get('/callback', function(req, res) {
@@ -45,7 +47,7 @@ app.get('/callback', function(req, res) {
     var access_token = body.access_token
     let uri = process.env.FRONTEND_URI || 'http://localhost:3000'
     res.redirect(uri + '?access_token=' + access_token)
-    //console.log('repsonse-body ->',body)
+    console.log('get token-response ->',body)
   })
 })
 
