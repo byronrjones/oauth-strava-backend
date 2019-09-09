@@ -8,7 +8,7 @@ let redirect_uri =
   process.env.REDIRECT_URI || 
   'http://localhost:8888/callback'
 
-app.get('/login', function(req, res) {
+app.get('/', function(req, res) {
   res.redirect('https://www.strava.com/oauth/authorize?' +
     querystring.stringify({
       client_id: process.env.STRAVA_CLIENT_ID,
@@ -19,7 +19,7 @@ app.get('/login', function(req, res) {
       
     }))
 
-    console.log('login-request-body ->',res)
+    //console.log('login-request-body ->',res)
 })
 
 app.get('/callback', function(req, res) {
@@ -47,7 +47,7 @@ app.get('/callback', function(req, res) {
     var access_token = body.access_token
     let uri = process.env.FRONTEND_URI || 'http://localhost:3000'
     res.redirect(uri + '?access_token=' + access_token)
-    console.log('get token-response ->',body)
+    //console.log('get token-response ->',body)
   })
 })
 
