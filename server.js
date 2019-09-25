@@ -48,7 +48,8 @@ app.get('/callback', function(req, res) {
     let uri = process.env.FRONTEND_URI || 'http://localhost:3000'
     res.redirect(uri + '?access_token=' + access_token)
 
-    console.log('get token-response ->',body)
+    let {created_at, firstname, lastname, state} = body.athlete;
+    console.log(`Authentication: ${firstname} ${lastname} in ${state} authenticated at ${created_at}`)
   })
 })
 
